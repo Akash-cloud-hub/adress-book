@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const UserSchema = z.object({
-    id: z.number().nullable().optional(),
+    id:  z.coerce.number().optional(),
     username: z.string().nonempty('Username is required'),
     email: z.string().nonempty('Email is required'),
     mobile_number: z.string().nonempty('Mobile Number is required'),

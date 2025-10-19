@@ -188,7 +188,7 @@ export default function Home() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View User</DropdownMenuItem>
-              <DropdownMenuItem>Edit User</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {router.push(`saveuser/${user.id}`)}}>Edit User</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );

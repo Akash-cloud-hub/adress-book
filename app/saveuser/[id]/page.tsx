@@ -39,6 +39,7 @@ import { roles } from "@/models/constants";
 import { EditUser, fetchUsersById } from "@/action/user";
 import { User } from "@/models/types";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SaveUser({
   params,
@@ -53,31 +54,37 @@ export default function SaveUser({
     // fetch user by id and set as default value
     const fetchUser = async () => {
       if (id !== "NEW") {
-        const res:User[] = await fetchUsersById(parseInt(id));
-        const user:User = res[0]; 
-        form.reset(user as unknown as z.infer<typeof UserSchema>);
-    }}
+        const res: User[] = await fetchUsersById(parseInt(id));
+        const user: User = res[0];
+        console.log(user);
+        form.reset(user as User as z.infer<typeof UserSchema>);
+      }
+    };
 
     fetchUser();
-    toast.success("User loaded")
+    toast.success("User loaded");
   }, [id]);
 
+  const router = useRouter();
   const onSubmit = async (data: z.infer<typeof UserSchema>) => {
+    console.log("Submitting", data);
     await EditUser(data);
-    toast.success("User saved")
+    toast.success("User saved");
+    router.push(`/`);
   };
-
 
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      id: null,
       username: "",
       email: "",
       mobile_number: "",
-      role: undefined,
+      role: [],
     },
   });
+
+  const {formState:{errors}} = form;
+  
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -87,6 +94,20 @@ export default function SaveUser({
       {/* Create a form to create a new user using zod */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+        {Object.keys(errors).length > 0 && (
+            <div className="text-red-500">
+              <h3 className="font-bold">Validation Errors:</h3>
+              <ul>
+                {Object.entries(errors).map(([field, error]) => (
+                  <li key={field}>
+                    <strong>{field}:</strong> {error?.message as string}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <FormField
             control={form.control}
             name="username"

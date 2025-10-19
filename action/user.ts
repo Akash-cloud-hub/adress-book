@@ -18,7 +18,7 @@ const EditUser = async (req:object) => {
     const data = req as User;
     console.log(data)
     console.log(data.email)
-    if (data.id) {
+    if (data.id && data.id !== 0) {
         // Update existing user
         await db.updateTable('master.user')
             .set({

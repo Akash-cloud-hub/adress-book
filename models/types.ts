@@ -18,7 +18,7 @@ export interface UserRole {
 }
 
 export interface UserTable {
-  id?: number; // bigint -> number (or string if very large)
+  id?: number | undefined; // bigint -> number (or string if very large)
   username: string | null;
   email: string | null;
   mobile_number: string | null;
